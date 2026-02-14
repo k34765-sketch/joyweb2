@@ -4,7 +4,7 @@ import {
   X, Layout, FileText, Image as ImageIcon, MessageSquare, Settings as SettingsIcon, Save, Plus, Trash2, 
   BarChart3, Users, MousePointer2, TrendingUp 
 } from 'lucide-react';
-import { SiteData, PortfolioItem, ServiceItem, FAQItem, Testimonial } from '../types';
+import { SiteData, PortfolioItem, ServiceItem, FAQItem, Testimonial } from '../types.ts';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface AdminDashboardProps {

@@ -1,17 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
-import { Header } from './components/Header';
-import { Footer } from './components/Footer';
-import { Hero } from './components/Hero';
-import { Services } from './components/Services';
-import { Portfolio } from './components/Portfolio';
-import { Process } from './components/Process';
-import { Testimonials } from './components/Testimonials';
-import { FAQ } from './components/FAQ';
-import { Contact } from './components/Contact';
-import { AdminDashboard } from './components/AdminDashboard';
-import { SiteData, ActiveTab } from './types';
-import { INITIAL_DATA } from './constants';
+import { Header } from './components/Header.tsx';
+import { Footer } from './components/Footer.tsx';
+import { Hero } from './components/Hero.tsx';
+import { Services } from './components/Services.tsx';
+import { Portfolio } from './components/Portfolio.tsx';
+import { Process } from './components/Process.tsx';
+import { Testimonials } from './components/Testimonials.tsx';
+import { FAQ } from './components/FAQ.tsx';
+import { Contact } from './components/Contact.tsx';
+import { AdminDashboard } from './components/AdminDashboard.tsx';
+import { SiteData, ActiveTab } from './types.ts';
+import { INITIAL_DATA } from './constants.ts';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
