@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { 
   X, Layout, FileText, Image as ImageIcon, MessageSquare, Settings as SettingsIcon, Save, Plus, Trash2, 
-  BarChart3, Users, MousePointer2, TrendingUp, Star, HelpCircle
+  BarChart3, Users, MousePointer2, TrendingUp, Star, HelpCircle, Pencil
 } from 'lucide-react';
 import { SiteData, PortfolioItem, ServiceItem, FAQItem, Testimonial } from '../types.ts';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -87,7 +87,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
 
   const renderSettings = () => (
     <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6 animate-in slide-in-from-right duration-300">
-      <h3 className="text-xl font-black text-slate-900 mb-6">기본 사이트 정보 및 SEO</h3>
+      <h3 className="text-xl font-black text-slate-900 mb-6">기본 사이트 정보 및 SNS 설정</h3>
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <label className="text-sm font-bold text-slate-700">사이트 이름</label>
@@ -98,12 +98,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
           <input value={localData.settings.metaTitle} onChange={(e) => updateSettings('metaTitle', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
         </div>
         <div className="space-y-2 md:col-span-2">
-          <label className="text-sm font-bold text-slate-700">이메일</label>
-          <input value={localData.settings.contactEmail} onChange={(e) => updateSettings('contactEmail', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
+          <label className="text-sm font-bold text-slate-700">티스토리 URL</label>
+          <input value={localData.settings.tistoryUrl} onChange={(e) => updateSettings('tistoryUrl', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
         </div>
-        <div className="space-y-2 md:col-span-2">
-          <label className="text-sm font-bold text-slate-700">주소</label>
-          <input value={localData.settings.address} onChange={(e) => updateSettings('address', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-slate-700">카카오톡 URL</label>
+          <input value={localData.settings.kakaoUrl} onChange={(e) => updateSettings('kakaoUrl', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-bold text-slate-700">블로그 URL</label>
+          <input value={localData.settings.blogUrl} onChange={(e) => updateSettings('blogUrl', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
         </div>
       </div>
     </div>

@@ -12,9 +12,9 @@ export const INITIAL_DATA: SiteData = {
     contactEmail: 'k34765@gmail.com',
     contactPhone: '01025103651',
     address: '인천광역시 강화군 선원면 충렬사로 73번길 78',
-    instagramUrl: 'https://instagram.com/joyweb',
-    kakaoUrl: 'https://pf.kakao.com/_joyweb',
-    blogUrl: 'https://blog.naver.com/joyweb',
+    tistoryUrl: 'https://joy0708everyday.tistory.com/',
+    kakaoUrl: 'https://joy0708everyday.tistory.com/',
+    blogUrl: 'https://joy0708everyday.tistory.com/',
     metaTitle: '조이웹 - 로고 & 웹사이트 전문 에이전시',
     metaDescription: '세련된 디자인과 탄탄한 기술력으로 당신의 비즈니스를 한 단계 더 끌어올립니다.'
   },

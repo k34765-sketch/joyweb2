@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Instagram, MessageCircle, Rss } from 'lucide-react';
+import { Pencil, MessageCircle, Rss } from 'lucide-react';
 import { SiteSettings, ActiveTab } from '../types.ts';
 
 interface FooterProps {
@@ -31,13 +31,16 @@ export const Footer: React.FC<FooterProps> = ({ settings, onNavigate }) => {
               대한민국 최고의 로고 및 웹 전문 디자인 스튜디오.
             </p>
             <div className="flex gap-4">
-              <a href={settings.instagramUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
-                <Instagram size={20} />
+              {/* 인스타그램 -> 티스토리 (Pencil 아이콘) */}
+              <a href={settings.tistoryUrl} target="_blank" rel="noreferrer" title="Tistory Blog" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
+                <Pencil size={20} />
               </a>
-              <a href={settings.kakaoUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
+              {/* 카카오톡 링크 -> 티스토리로 통일 */}
+              <a href={settings.kakaoUrl} target="_blank" rel="noreferrer" title="KakaoTalk" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
                 <MessageCircle size={20} />
               </a>
-              <a href={settings.blogUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
+              {/* 네이버 블로그 링크 -> 티스토리로 통일 */}
+              <a href={settings.blogUrl} target="_blank" rel="noreferrer" title="Naver Blog" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
                 <Rss size={20} />
               </a>
             </div>

@@ -38,7 +38,7 @@ export interface SiteSettings {
   contactEmail: string;
   contactPhone: string;
   address: string;
-  instagramUrl: string;
+  tistoryUrl: string;
   kakaoUrl: string;
   blogUrl: string;
   metaTitle: string;
