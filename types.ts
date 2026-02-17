@@ -43,6 +43,7 @@ export interface SiteSettings {
   blogUrl: string;
   metaTitle: string;
   metaDescription: string;
+  adminPassword?: string; // 관리자 페이지 비밀번호 추가
 }
 
 export interface SiteData {

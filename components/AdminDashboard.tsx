@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { 
   X, Layout, FileText, Image as ImageIcon, MessageSquare, Settings as SettingsIcon, Save, Plus, Trash2, 
-  BarChart3, Users, MousePointer2, TrendingUp, Star, HelpCircle, Pencil
+  BarChart3, Users, MousePointer2, TrendingUp, Star, HelpCircle, Lock
 } from 'lucide-react';
 import { SiteData, PortfolioItem, ServiceItem, FAQItem, Testimonial } from '../types.ts';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -86,28 +86,54 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
   );
 
   const renderSettings = () => (
-    <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6 animate-in slide-in-from-right duration-300">
-      <h3 className="text-xl font-black text-slate-900 mb-6">기본 사이트 정보 및 SNS 설정</h3>
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700">사이트 이름</label>
-          <input value={localData.settings.siteName} onChange={(e) => updateSettings('siteName', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
+    <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm space-y-12 animate-in slide-in-from-right duration-300">
+      <div className="space-y-6">
+        <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2">
+          <SettingsIcon className="text-teal-600" /> 기본 사이트 정보 및 SNS 설정
+        </h3>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700">사이트 이름</label>
+            <input value={localData.settings.siteName} onChange={(e) => updateSettings('siteName', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700">SEO 제목</label>
+            <input value={localData.settings.metaTitle} onChange={(e) => updateSettings('metaTitle', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <label className="text-sm font-bold text-slate-700">티스토리 URL</label>
+            <input value={localData.settings.tistoryUrl} onChange={(e) => updateSettings('tistoryUrl', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700">카카오톡 URL</label>
+            <input value={localData.settings.kakaoUrl} onChange={(e) => updateSettings('kakaoUrl', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700">블로그 URL</label>
+            <input value={localData.settings.blogUrl} onChange={(e) => updateSettings('blogUrl', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
+          </div>
         </div>
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700">SEO 제목</label>
-          <input value={localData.settings.metaTitle} onChange={(e) => updateSettings('metaTitle', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
-        </div>
-        <div className="space-y-2 md:col-span-2">
-          <label className="text-sm font-bold text-slate-700">티스토리 URL</label>
-          <input value={localData.settings.tistoryUrl} onChange={(e) => updateSettings('tistoryUrl', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
-        </div>
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700">카카오톡 URL</label>
-          <input value={localData.settings.kakaoUrl} onChange={(e) => updateSettings('kakaoUrl', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
-        </div>
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700">블로그 URL</label>
-          <input value={localData.settings.blogUrl} onChange={(e) => updateSettings('blogUrl', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
+      </div>
+
+      <div className="pt-8 border-t border-slate-100 space-y-6">
+        <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
+          <Lock className="text-teal-600" /> 보안 설정
+        </h3>
+        <div className="max-w-md space-y-2">
+          <label className="text-sm font-bold text-slate-700">CMS 관리자 비밀번호 변경</label>
+          <div className="flex gap-4">
+            <input 
+              type="text"
+              value={localData.settings.adminPassword} 
+              onChange={(e) => updateSettings('adminPassword', e.target.value)} 
+              placeholder="새 비밀번호 입력"
+              className="flex-grow px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500 font-bold tracking-wider" 
+            />
+            <div className="px-4 py-3 bg-slate-100 rounded-xl text-slate-400 flex items-center justify-center">
+              <Lock size={20} />
+            </div>
+          </div>
+          <p className="text-xs text-slate-400 italic">비밀번호 변경 후 상단의 '변경사항 저장하기'를 눌러야 최종 적용됩니다.</p>
         </div>
       </div>
     </div>
@@ -202,7 +228,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
         <nav className="flex-grow space-y-2">
           {[
             { id: 'stats', label: '대시보드 통계', icon: <BarChart3 size={20} /> },
-            { id: 'settings', label: '기본 설정 & SEO', icon: <SettingsIcon size={20} /> },
+            { id: 'settings', label: '기본 설정 & 보안', icon: <SettingsIcon size={20} /> },
             { id: 'portfolio', label: '포트폴리오 편집', icon: <ImageIcon size={20} /> },
             { id: 'services', label: '서비스 관리', icon: <Layout size={20} /> },
             { id: 'testimonials', label: '고객 후기', icon: <MessageSquare size={20} /> },
@@ -222,7 +248,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
           <div>
             <h2 className="text-3xl font-black text-slate-900">
               {activeMenu === 'stats' && '비즈니스 인사이트'}
-              {activeMenu === 'settings' && '사이트 환경 설정'}
+              {activeMenu === 'settings' && '사이트 설정 & 보안'}
               {activeMenu === 'portfolio' && '프로젝트 갤러리'}
               {activeMenu === 'services' && '서비스 구성'}
               {activeMenu === 'testimonials' && '클라이언트 리뷰'}

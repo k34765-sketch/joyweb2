@@ -10,12 +10,14 @@ import { Testimonials } from './components/Testimonials.tsx';
 import { FAQ } from './components/FAQ.tsx';
 import { Contact } from './components/Contact.tsx';
 import { AdminDashboard } from './components/AdminDashboard.tsx';
+import { AdminAuth } from './components/AdminAuth.tsx';
 import { LegalPage } from './components/LegalPage.tsx';
 import { SiteData, ActiveTab } from './types.ts';
 import { INITIAL_DATA } from './constants.ts';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
+  const [isAuthorized, setIsAuthorized] = useState(false); // 관리자 인증 여부
   const [siteData, setSiteData] = useState<SiteData>(() => {
     const saved = localStorage.getItem('joyweb_site_data');
     return saved ? JSON.parse(saved) : INITIAL_DATA;
@@ -32,11 +34,23 @@ const App: React.FC = () => {
 
   const renderContent = () => {
     if (activeTab === 'admin') {
+      if (!isAuthorized) {
+        return (
+          <AdminAuth 
+            correctPassword={siteData.settings.adminPassword} 
+            onSuccess={() => setIsAuthorized(true)} 
+            onCancel={() => setActiveTab('home')}
+          />
+        );
+      }
       return (
         <AdminDashboard 
           siteData={siteData} 
           onUpdate={handleUpdateData} 
-          onClose={() => setActiveTab('home')}
+          onClose={() => {
+            setActiveTab('home');
+            setIsAuthorized(false); // 나갈 때 인증 해제 (보안 강화)
+          }}
         />
       );
     }
@@ -84,7 +98,7 @@ const App: React.FC = () => {
       <div className="flex-grow">
         {renderContent()}
       </div>
-      {activeTab !== 'admin' && (
+      {activeTab !== 'admin' && (activeTab !== 'terms' && activeTab !== 'privacy') && (
         <Footer settings={siteData.settings} onNavigate={setActiveTab} />
       )}
     </div>
