@@ -17,7 +17,7 @@ export const INITIAL_DATA: SiteData = {
     blogUrl: 'https://joy0708everyday.tistory.com/',
     metaTitle: '조이웹 - 로고 & 웹사이트 전문 에이전시',
     metaDescription: '세련된 디자인과 탄탄한 기술력으로 당신의 비즈니스를 한 단계 더 끌어올립니다.',
-    adminPassword: 'admin1234' // 초기 비밀번호
+    adminPassword: '020708' // 요청하신 비밀번호로 설정
   },
   services: [
     {

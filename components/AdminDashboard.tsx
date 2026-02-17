@@ -117,23 +117,28 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
 
       <div className="pt-8 border-t border-slate-100 space-y-6">
         <h3 className="text-xl font-black text-slate-900 flex items-center gap-2">
-          <Lock className="text-teal-600" /> 보안 설정
+          <Lock className="text-teal-600" /> 관리자 보안 설정
         </h3>
-        <div className="max-w-md space-y-2">
-          <label className="text-sm font-bold text-slate-700">CMS 관리자 비밀번호 변경</label>
-          <div className="flex gap-4">
-            <input 
-              type="text"
-              value={localData.settings.adminPassword} 
-              onChange={(e) => updateSettings('adminPassword', e.target.value)} 
-              placeholder="새 비밀번호 입력"
-              className="flex-grow px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500 font-bold tracking-wider" 
-            />
-            <div className="px-4 py-3 bg-slate-100 rounded-xl text-slate-400 flex items-center justify-center">
-              <Lock size={20} />
+        <div className="max-w-md space-y-4">
+          <div className="p-4 bg-teal-50 border border-teal-100 rounded-2xl text-teal-800 text-sm">
+            <p className="font-bold mb-1">비밀번호 관리 안내</p>
+            <p className="opacity-80">여기서 변경하신 비밀번호는 다음 관리자 페이지 로그인부터 적용됩니다. 변경 후 꼭 저장을 눌러주세요.</p>
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-slate-700">CMS 관리자 비밀번호</label>
+            <div className="flex gap-4">
+              <input 
+                type="text"
+                value={localData.settings.adminPassword} 
+                onChange={(e) => updateSettings('adminPassword', e.target.value)} 
+                placeholder="020708"
+                className="flex-grow px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500 font-bold tracking-[0.2em] text-center text-teal-700" 
+              />
+              <div className="px-4 py-3 bg-teal-600 rounded-xl text-white flex items-center justify-center">
+                <Lock size={20} />
+              </div>
             </div>
           </div>
-          <p className="text-xs text-slate-400 italic">비밀번호 변경 후 상단의 '변경사항 저장하기'를 눌러야 최종 적용됩니다.</p>
         </div>
       </div>
     </div>
