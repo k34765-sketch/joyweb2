@@ -1,5 +1,5 @@
 
-import { SiteData } from './types';
+import { SiteData } from './types.ts';
 
 export const INITIAL_DATA: SiteData = {
   settings: {
@@ -9,9 +9,9 @@ export const INITIAL_DATA: SiteData = {
     heroTitle: '비즈니스의 가치를 디자인하는 조이웹',
     heroSubtitle: '로고 디자인부터 홈페이지 제작까지, 감각적인 브랜드 아이덴티티를 완성합니다.',
     heroImage: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1920',
-    contactEmail: 'contact@joyweb.com',
-    contactPhone: '02-1234-5678',
-    address: '서울특별시 강남구 테헤란로 123 조이빌딩 7층',
+    contactEmail: 'k34765@gmail.com',
+    contactPhone: '01025103651',
+    address: '인천광역시 강화군 선원면 충렬사로 73번길 78',
     instagramUrl: 'https://instagram.com/joyweb',
     kakaoUrl: 'https://pf.kakao.com/_joyweb',
     blogUrl: 'https://blog.naver.com/joyweb',
