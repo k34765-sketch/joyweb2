@@ -67,7 +67,7 @@ export const Footer: React.FC<FooterProps> = ({ settings, onNavigate }) => {
         </div>
         
         <div className="pt-12 border-t border-slate-800 text-xs flex flex-col md:flex-row justify-between items-center gap-4">
-          <p>© {new Date().getFullYear()} {settings.siteName} All Rights Reserved. Business License: 123-45-67890</p>
+          <p>© {new Date().getFullYear()} {settings.siteName} All Rights Reserved.</p>
           <div className="flex gap-6">
             <button onClick={() => handleNav('terms')} className="hover:text-white">이용약관</button>
             <button onClick={() => handleNav('privacy')} className="hover:text-white font-bold">개인정보처리방침</button>

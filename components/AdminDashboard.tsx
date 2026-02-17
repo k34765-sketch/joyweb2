@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { 
   X, Layout, FileText, Image as ImageIcon, MessageSquare, Settings as SettingsIcon, Save, Plus, Trash2, 
-  BarChart3, Users, MousePointer2, TrendingUp, Star, HelpCircle, Lock
+  BarChart3, Users, MousePointer2, TrendingUp, Star, HelpCircle, Lock, Eye, EyeOff
 } from 'lucide-react';
 import { SiteData, PortfolioItem, ServiceItem, FAQItem, Testimonial } from '../types.ts';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -26,6 +26,7 @@ const analyticsData = [
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpdate, onClose }) => {
   const [activeMenu, setActiveMenu] = useState<'stats' | 'settings' | 'portfolio' | 'services' | 'faq' | 'testimonials'>('stats');
   const [localData, setLocalData] = useState<SiteData>(siteData);
+  const [showPassword, setShowPassword] = useState(false); // 비밀번호 보임 상태 관리
 
   const handleSave = () => {
     onUpdate(localData);
@@ -126,17 +127,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
           </div>
           <div className="space-y-2">
             <label className="text-sm font-bold text-slate-700">CMS 관리자 비밀번호</label>
-            <div className="flex gap-4">
+            <div className="flex gap-4 relative">
               <input 
-                type="text"
+                type={showPassword ? "text" : "password"}
                 value={localData.settings.adminPassword} 
                 onChange={(e) => updateSettings('adminPassword', e.target.value)} 
                 placeholder="020708"
-                className="flex-grow px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500 font-bold tracking-[0.2em] text-center text-teal-700" 
+                className="flex-grow px-4 py-3 pr-12 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500 font-bold tracking-[0.2em] text-center text-teal-700 transition-all" 
               />
-              <div className="px-4 py-3 bg-teal-600 rounded-xl text-white flex items-center justify-center">
-                <Lock size={20} />
-              </div>
+              <button 
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-teal-600 transition-colors"
+                title={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
           </div>
         </div>
