@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { 
   X, Layout, FileText, Image as ImageIcon, MessageSquare, Settings as SettingsIcon, Save, Plus, Trash2, 
-  BarChart3, Users, MousePointer2, TrendingUp, Star, HelpCircle, Lock, Eye, EyeOff
+  BarChart3, Users, MousePointer2, TrendingUp, Star, HelpCircle, Lock, Eye, EyeOff, Link as LinkIcon
 } from 'lucide-react';
 import { SiteData, PortfolioItem, ServiceItem, FAQItem, Testimonial } from '../types.ts';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -154,15 +154,33 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
     <div className="space-y-6 animate-in slide-in-from-right duration-300">
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-black text-slate-900">포트폴리오 관리</h3>
-        <button onClick={() => setLocalData({...localData, portfolio: [{id: Date.now().toString(), title: '신규 프로젝트', category: '기타', imageUrl: 'https://picsum.photos/800/600', description: ''}, ...localData.portfolio]})} className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-xl text-sm font-bold hover:bg-teal-700"><Plus size={18} /> 새 항목</button>
+        <button onClick={() => setLocalData({...localData, portfolio: [{id: Date.now().toString(), title: '신규 프로젝트', category: '기타', imageUrl: 'https://picsum.photos/800/600', description: '', link: ''}, ...localData.portfolio]})} className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-xl text-sm font-bold hover:bg-teal-700"><Plus size={18} /> 새 항목</button>
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {localData.portfolio.map((item) => (
           <div key={item.id} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-            <img src={item.imageUrl} className="w-full h-32 object-cover rounded-xl" alt="" />
-            <input value={item.title} onChange={(e) => setLocalData({...localData, portfolio: localData.portfolio.map(p => p.id === item.id ? {...p, title: e.target.value} : p)})} className="w-full px-2 py-1 text-lg font-bold border-b focus:border-teal-500 outline-none" />
-            <input value={item.imageUrl} onChange={(e) => setLocalData({...localData, portfolio: localData.portfolio.map(p => p.id === item.id ? {...p, imageUrl: e.target.value} : p)})} className="w-full px-2 py-1 text-xs text-slate-400 border rounded" />
-            <button onClick={() => setLocalData({...localData, portfolio: localData.portfolio.filter(p => p.id !== item.id)})} className="text-red-500 text-xs font-bold flex items-center gap-1"><Trash2 size={14} /> 삭제</button>
+            <img src={item.imageUrl} className="w-full h-32 object-cover rounded-xl bg-slate-100" alt="" />
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">제목</label>
+                <input value={item.title} onChange={(e) => setLocalData({...localData, portfolio: localData.portfolio.map(p => p.id === item.id ? {...p, title: e.target.value} : p)})} className="w-full px-3 py-2 text-sm font-bold bg-slate-50 border border-transparent rounded-lg focus:border-teal-500 outline-none" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">이미지 URL</label>
+                <div className="flex gap-2">
+                   <div className="p-2 bg-slate-100 rounded-lg text-slate-400"><ImageIcon size={14}/></div>
+                   <input value={item.imageUrl} onChange={(e) => setLocalData({...localData, portfolio: localData.portfolio.map(p => p.id === item.id ? {...p, imageUrl: e.target.value} : p)})} className="flex-grow px-3 py-1 text-xs text-slate-500 bg-slate-50 border border-transparent rounded-lg focus:border-teal-500 outline-none" placeholder="https://..." />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">연결 링크 (URL)</label>
+                <div className="flex gap-2">
+                   <div className="p-2 bg-slate-100 rounded-lg text-slate-400"><LinkIcon size={14}/></div>
+                   <input value={item.link || ''} onChange={(e) => setLocalData({...localData, portfolio: localData.portfolio.map(p => p.id === item.id ? {...p, link: e.target.value} : p)})} className="flex-grow px-3 py-1 text-xs text-teal-600 bg-teal-50 border border-transparent rounded-lg focus:border-teal-500 outline-none font-medium" placeholder="https://..." />
+                </div>
+              </div>
+            </div>
+            <button onClick={() => setLocalData({...localData, portfolio: localData.portfolio.filter(p => p.id !== item.id)})} className="w-full py-2 text-red-500 text-xs font-bold flex items-center justify-center gap-1 hover:bg-red-50 rounded-lg transition-colors mt-2"><Trash2 size={14} /> 삭제하기</button>
           </div>
         ))}
       </div>

@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { PortfolioItem } from '../types';
+import { ExternalLink } from 'lucide-react';
 
 interface PortfolioProps {
   portfolio: PortfolioItem[];
@@ -40,20 +41,32 @@ export const Portfolio: React.FC<PortfolioProps> = ({ portfolio }) => {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-8">
         {filteredItems.map((item) => (
-          <div key={item.id} className="group relative overflow-hidden rounded-3xl cursor-pointer">
+          <a 
+            key={item.id} 
+            href={item.link || '#'} 
+            target={item.link ? "_blank" : "_self"} 
+            rel="noopener noreferrer"
+            className="group relative overflow-hidden rounded-3xl cursor-pointer block bg-slate-100"
+          >
             <div className="aspect-[16/10] overflow-hidden">
               <img 
                 src={item.imageUrl} 
                 alt={item.title} 
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80&w=800';
+                }}
               />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-teal-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
-              <span className="text-teal-300 text-xs font-bold uppercase tracking-widest mb-2">{item.category}</span>
+            <div className="absolute inset-0 bg-gradient-to-t from-teal-900/95 via-teal-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-teal-300 text-xs font-bold uppercase tracking-widest">{item.category}</span>
+                {item.link && <ExternalLink size={18} className="text-white/70" />}
+              </div>
               <h4 className="text-white text-2xl font-black mb-2">{item.title}</h4>
               <p className="text-slate-200 text-sm line-clamp-2">{item.description}</p>
             </div>
-          </div>
+          </a>
         ))}
       </div>
     </div>

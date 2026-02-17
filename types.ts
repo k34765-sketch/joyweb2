@@ -5,6 +5,7 @@ export interface PortfolioItem {
   category: string;
   imageUrl: string;
   description: string;
+  link?: string; // 프로젝트 연결 링크 추가
 }
 
 export interface ServiceItem {

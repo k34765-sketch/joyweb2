@@ -45,28 +45,32 @@ export const INITIAL_DATA: SiteData = {
       title: '퓨처 테크놀로지 로고',
       category: '브랜드 디자인',
       imageUrl: 'https://picsum.photos/seed/tech/800/600',
-      description: '미래지향적인 선을 강조한 IT 기업 아이덴티티 구축'
+      description: '미래지향적인 선을 강조한 IT 기업 아이덴티티 구축',
+      link: 'https://joy0708everyday.tistory.com/'
     },
     {
       id: 'p2',
       title: '카페 루미에르 웹사이트',
       category: '웹 디자인',
       imageUrl: 'https://picsum.photos/seed/cafe/800/600',
-      description: '감성적인 무드와 예약 시스템이 통합된 커스텀 사이트'
+      description: '감성적인 무드와 예약 시스템이 통합된 커스텀 사이트',
+      link: 'https://joy0708everyday.tistory.com/'
     },
     {
       id: 'p3',
       title: '헬스케어 앱 UI',
       category: '앱 디자인',
       imageUrl: 'https://picsum.photos/seed/health/800/600',
-      description: '직관적인 건강 데이터 관리 인터페이스 설계'
+      description: '직관적인 건강 데이터 관리 인터페이스 설계',
+      link: 'https://joy0708everyday.tistory.com/'
     },
     {
       id: 'p4',
       title: '모던 퍼니처 패키징',
       category: '그래픽 디자인',
       imageUrl: 'https://picsum.photos/seed/furniture/800/600',
-      description: '친환경 소재와 미니멀리즘을 결합한 패키지 디자인'
+      description: '친환경 소재와 미니멀리즘을 결합한 패키지 디자인',
+      link: 'https://joy0708everyday.tistory.com/'
     }
   ],
   testimonials: [
