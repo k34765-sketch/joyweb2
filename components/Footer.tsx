@@ -1,13 +1,25 @@
 
 import React from 'react';
 import { Instagram, MessageCircle, Rss } from 'lucide-react';
-import { SiteSettings } from '../types';
+import { SiteSettings, ActiveTab } from '../types.ts';
 
 interface FooterProps {
   settings: SiteSettings;
+  onNavigate: (tab: ActiveTab) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ settings }) => {
+export const Footer: React.FC<FooterProps> = ({ settings, onNavigate }) => {
+  const handleNav = (tab: ActiveTab, id?: string) => {
+    onNavigate(tab);
+    if (id) {
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <footer className="bg-slate-900 text-slate-400 py-20">
       <div className="max-w-7xl mx-auto px-4">
@@ -19,13 +31,13 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
               대한민국 최고의 로고 및 웹 전문 디자인 스튜디오.
             </p>
             <div className="flex gap-4">
-              <a href={settings.instagramUrl} className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
+              <a href={settings.instagramUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
                 <Instagram size={20} />
               </a>
-              <a href={settings.kakaoUrl} className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
+              <a href={settings.kakaoUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
                 <MessageCircle size={20} />
               </a>
-              <a href={settings.blogUrl} className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
+              <a href={settings.blogUrl} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-teal-600 hover:text-white transition-all">
                 <Rss size={20} />
               </a>
             </div>
@@ -34,10 +46,10 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
           <div className="space-y-6">
             <h4 className="text-white font-bold uppercase tracking-widest text-sm">Quick Links</h4>
             <ul className="space-y-3">
-              <li><a href="#services" className="hover:text-teal-400 transition-colors">Services</a></li>
-              <li><a href="#portfolio" className="hover:text-teal-400 transition-colors">Portfolio</a></li>
-              <li><a href="#process" className="hover:text-teal-400 transition-colors">Work Process</a></li>
-              <li><a href="#contact" className="hover:text-teal-400 transition-colors">Contact</a></li>
+              <li><button onClick={() => handleNav('home', 'services')} className="hover:text-teal-400 transition-colors">Services</button></li>
+              <li><button onClick={() => handleNav('home', 'portfolio')} className="hover:text-teal-400 transition-colors">Portfolio</button></li>
+              <li><button onClick={() => handleNav('home', 'process')} className="hover:text-teal-400 transition-colors">Work Process</button></li>
+              <li><button onClick={() => handleNav('home', 'contact')} className="hover:text-teal-400 transition-colors">Contact</button></li>
             </ul>
           </div>
 
@@ -54,8 +66,8 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
         <div className="pt-12 border-t border-slate-800 text-xs flex flex-col md:flex-row justify-between items-center gap-4">
           <p>© {new Date().getFullYear()} {settings.siteName} All Rights Reserved. Business License: 123-45-67890</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-white">이용약관</a>
-            <a href="#" className="hover:text-white font-bold">개인정보처리방침</a>
+            <button onClick={() => handleNav('terms')} className="hover:text-white">이용약관</button>
+            <button onClick={() => handleNav('privacy')} className="hover:text-white font-bold">개인정보처리방침</button>
           </div>
         </div>
       </div>

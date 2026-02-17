@@ -10,6 +10,7 @@ import { Testimonials } from './components/Testimonials.tsx';
 import { FAQ } from './components/FAQ.tsx';
 import { Contact } from './components/Contact.tsx';
 import { AdminDashboard } from './components/AdminDashboard.tsx';
+import { LegalPage } from './components/LegalPage.tsx';
 import { SiteData, ActiveTab } from './types.ts';
 import { INITIAL_DATA } from './constants.ts';
 
@@ -22,7 +23,6 @@ const App: React.FC = () => {
 
   useEffect(() => {
     localStorage.setItem('joyweb_site_data', JSON.stringify(siteData));
-    // Update document title for SEO
     document.title = siteData.settings.metaTitle;
   }, [siteData]);
 
@@ -39,6 +39,10 @@ const App: React.FC = () => {
           onClose={() => setActiveTab('home')}
         />
       );
+    }
+
+    if (activeTab === 'terms' || activeTab === 'privacy') {
+      return <LegalPage type={activeTab} onBack={() => setActiveTab('home')} />;
     }
 
     return (
@@ -81,7 +85,7 @@ const App: React.FC = () => {
         {renderContent()}
       </div>
       {activeTab !== 'admin' && (
-        <Footer settings={siteData.settings} />
+        <Footer settings={siteData.settings} onNavigate={setActiveTab} />
       )}
     </div>
   );

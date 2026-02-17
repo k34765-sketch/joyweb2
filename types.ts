@@ -53,4 +53,4 @@ export interface SiteData {
   faq: FAQItem[];
 }
 
-export type ActiveTab = 'home' | 'services' | 'portfolio' | 'process' | 'contact' | 'admin';
+export type ActiveTab = 'home' | 'services' | 'portfolio' | 'process' | 'contact' | 'admin' | 'terms' | 'privacy';

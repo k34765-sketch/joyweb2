@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { 
   X, Layout, FileText, Image as ImageIcon, MessageSquare, Settings as SettingsIcon, Save, Plus, Trash2, 
-  BarChart3, Users, MousePointer2, TrendingUp 
+  BarChart3, Users, MousePointer2, TrendingUp, Star, HelpCircle
 } from 'lucide-react';
 import { SiteData, PortfolioItem, ServiceItem, FAQItem, Testimonial } from '../types.ts';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -14,13 +14,13 @@ interface AdminDashboardProps {
 }
 
 const analyticsData = [
-  { name: 'Mon', uv: 4000, pv: 2400, amt: 2400 },
-  { name: 'Tue', uv: 3000, pv: 1398, amt: 2210 },
-  { name: 'Wed', uv: 2000, pv: 9800, amt: 2290 },
-  { name: 'Thu', uv: 2780, pv: 3908, amt: 2000 },
-  { name: 'Fri', uv: 1890, pv: 4800, amt: 2181 },
-  { name: 'Sat', uv: 2390, pv: 3800, amt: 2500 },
-  { name: 'Sun', uv: 3490, pv: 4300, amt: 2100 },
+  { name: 'Mon', uv: 4000, pv: 2400 },
+  { name: 'Tue', uv: 3000, pv: 1398 },
+  { name: 'Wed', uv: 2000, pv: 9800 },
+  { name: 'Thu', uv: 2780, pv: 3908 },
+  { name: 'Fri', uv: 1890, pv: 4800 },
+  { name: 'Sat', uv: 2390, pv: 3800 },
+  { name: 'Sun', uv: 3490, pv: 4300 },
 ];
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpdate, onClose }) => {
@@ -39,6 +39,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
     });
   };
 
+  // --- Render Functions ---
+
   const renderStats = () => (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -50,9 +52,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
         ].map((stat, i) => (
           <div key={i} className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
             <div className="flex items-center justify-between mb-4">
-              <div className={`p-3 rounded-2xl ${stat.color} text-white`}>
-                {stat.icon}
-              </div>
+              <div className={`p-3 rounded-2xl ${stat.color} text-white`}>{stat.icon}</div>
               <span className="text-xs font-black text-green-600 bg-green-50 px-2 py-1 rounded-lg">{stat.trend}</span>
             </div>
             <div className="text-2xl font-black text-slate-900">{stat.value}</div>
@@ -60,7 +60,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
           </div>
         ))}
       </div>
-
       <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
         <h3 className="text-xl font-black text-slate-900 mb-8 flex items-center gap-2">
           <BarChart3 className="text-teal-600" /> 트래픽 분석 (7일 기준)
@@ -77,9 +76,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
               <YAxis hide />
-              <Tooltip 
-                contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
-              />
+              <Tooltip contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
               <Area type="monotone" dataKey="pv" stroke="#0d9488" strokeWidth={3} fillOpacity={1} fill="url(#colorPv)" />
             </AreaChart>
           </ResponsiveContainer>
@@ -94,35 +91,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <label className="text-sm font-bold text-slate-700">사이트 이름</label>
-          <input 
-            value={localData.settings.siteName}
-            onChange={(e) => updateSettings('siteName', e.target.value)}
-            className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500"
-          />
+          <input value={localData.settings.siteName} onChange={(e) => updateSettings('siteName', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700">SEO 제목 (메타태그)</label>
-          <input 
-            value={localData.settings.metaTitle}
-            onChange={(e) => updateSettings('metaTitle', e.target.value)}
-            className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500"
-          />
+          <label className="text-sm font-bold text-slate-700">SEO 제목</label>
+          <input value={localData.settings.metaTitle} onChange={(e) => updateSettings('metaTitle', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
         </div>
         <div className="space-y-2 md:col-span-2">
-          <label className="text-sm font-bold text-slate-700">메인 히어로 타이틀</label>
-          <input 
-            value={localData.settings.heroTitle}
-            onChange={(e) => updateSettings('heroTitle', e.target.value)}
-            className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500"
-          />
+          <label className="text-sm font-bold text-slate-700">이메일</label>
+          <input value={localData.settings.contactEmail} onChange={(e) => updateSettings('contactEmail', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
         </div>
         <div className="space-y-2 md:col-span-2">
-          <label className="text-sm font-bold text-slate-700">메인 히어로 설명</label>
-          <textarea 
-            value={localData.settings.heroSubtitle}
-            onChange={(e) => updateSettings('heroSubtitle', e.target.value)}
-            className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500 h-24 resize-none"
-          />
+          <label className="text-sm font-bold text-slate-700">주소</label>
+          <input value={localData.settings.address} onChange={(e) => updateSettings('address', e.target.value)} className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none focus:border-teal-500" />
         </div>
       </div>
     </div>
@@ -132,53 +113,78 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
     <div className="space-y-6 animate-in slide-in-from-right duration-300">
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-black text-slate-900">포트폴리오 관리</h3>
-        <button 
-          onClick={() => {
-            const newItem: PortfolioItem = {
-              id: Date.now().toString(),
-              title: '새 프로젝트',
-              category: '기타',
-              imageUrl: 'https://picsum.photos/800/600',
-              description: '설명을 입력해 주세요.'
-            };
-            setLocalData({...localData, portfolio: [newItem, ...localData.portfolio]});
-          }}
-          className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-xl text-sm font-bold hover:bg-teal-700"
-        >
-          <Plus size={18} /> 새 항목 추가
-        </button>
+        <button onClick={() => setLocalData({...localData, portfolio: [{id: Date.now().toString(), title: '신규 프로젝트', category: '기타', imageUrl: 'https://picsum.photos/800/600', description: ''}, ...localData.portfolio]})} className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-xl text-sm font-bold hover:bg-teal-700"><Plus size={18} /> 새 항목</button>
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {localData.portfolio.map((item) => (
           <div key={item.id} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-4">
-            <img src={item.imageUrl} className="w-full h-40 object-cover rounded-2xl" alt="" />
-            <input 
-              value={item.title}
-              onChange={(e) => {
-                const updated = localData.portfolio.map(p => p.id === item.id ? {...p, title: e.target.value} : p);
-                setLocalData({...localData, portfolio: updated});
-              }}
-              className="w-full px-3 py-2 text-lg font-bold outline-none border-b border-slate-100 focus:border-teal-500"
-            />
-            <select 
-              value={item.category}
-              onChange={(e) => {
-                const updated = localData.portfolio.map(p => p.id === item.id ? {...p, category: e.target.value} : p);
-                setLocalData({...localData, portfolio: updated});
-              }}
-              className="w-full px-3 py-2 bg-slate-50 rounded-lg text-sm outline-none"
-            >
-              <option>브랜드 디자인</option>
-              <option>웹 디자인</option>
-              <option>앱 디자인</option>
-              <option>기타</option>
-            </select>
-            <button 
-              onClick={() => setLocalData({...localData, portfolio: localData.portfolio.filter(p => p.id !== item.id)})}
-              className="flex items-center gap-2 text-red-500 text-xs font-bold hover:bg-red-50 p-2 rounded-lg transition-colors"
-            >
-              <Trash2 size={14} /> 이 프로젝트 삭제
-            </button>
+            <img src={item.imageUrl} className="w-full h-32 object-cover rounded-xl" alt="" />
+            <input value={item.title} onChange={(e) => setLocalData({...localData, portfolio: localData.portfolio.map(p => p.id === item.id ? {...p, title: e.target.value} : p)})} className="w-full px-2 py-1 text-lg font-bold border-b focus:border-teal-500 outline-none" />
+            <input value={item.imageUrl} onChange={(e) => setLocalData({...localData, portfolio: localData.portfolio.map(p => p.id === item.id ? {...p, imageUrl: e.target.value} : p)})} className="w-full px-2 py-1 text-xs text-slate-400 border rounded" />
+            <button onClick={() => setLocalData({...localData, portfolio: localData.portfolio.filter(p => p.id !== item.id)})} className="text-red-500 text-xs font-bold flex items-center gap-1"><Trash2 size={14} /> 삭제</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderServicesManager = () => (
+    <div className="space-y-6 animate-in slide-in-from-right duration-300">
+      <div className="flex items-center justify-between">
+        <h3 className="text-xl font-black text-slate-900">서비스 관리</h3>
+        <button onClick={() => setLocalData({...localData, services: [...localData.services, {id: Date.now().toString(), title: '새 서비스', description: '내용을 입력하세요.', icon: 'Zap'}]})} className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-xl text-sm font-bold hover:bg-teal-700"><Plus size={18} /> 새 항목</button>
+      </div>
+      <div className="space-y-4">
+        {localData.services.map((item) => (
+          <div key={item.id} className="bg-white p-6 rounded-2xl border border-slate-100 flex gap-6 items-start">
+            <div className="p-4 bg-teal-50 rounded-xl text-teal-600"><Layout size={24} /></div>
+            <div className="flex-grow space-y-3">
+              <input value={item.title} onChange={(e) => setLocalData({...localData, services: localData.services.map(s => s.id === item.id ? {...s, title: e.target.value} : s)})} className="w-full font-bold text-lg outline-none border-b border-transparent focus:border-teal-500" />
+              <textarea value={item.description} onChange={(e) => setLocalData({...localData, services: localData.services.map(s => s.id === item.id ? {...s, description: e.target.value} : s)})} className="w-full text-sm text-slate-500 outline-none bg-slate-50 p-3 rounded-lg h-20" />
+            </div>
+            <button onClick={() => setLocalData({...localData, services: localData.services.filter(s => s.id !== item.id)})} className="text-red-400 p-2"><Trash2 size={20} /></button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderFAQManager = () => (
+    <div className="space-y-6 animate-in slide-in-from-right duration-300">
+      <div className="flex items-center justify-between">
+        <h3 className="text-xl font-black text-slate-900">FAQ 관리</h3>
+        <button onClick={() => setLocalData({...localData, faq: [...localData.faq, {id: Date.now().toString(), question: '질문이 무엇인가요?', answer: '답변을 입력하세요.'}]})} className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-xl text-sm font-bold hover:bg-teal-700"><Plus size={18} /> 새 항목</button>
+      </div>
+      <div className="space-y-4">
+        {localData.faq.map((item) => (
+          <div key={item.id} className="bg-white p-6 rounded-2xl border border-slate-100 space-y-3">
+            <div className="flex gap-2 items-center text-teal-600 font-bold"><HelpCircle size={18} /> 질문</div>
+            <input value={item.question} onChange={(e) => setLocalData({...localData, faq: localData.faq.map(f => f.id === item.id ? {...f, question: e.target.value} : f)})} className="w-full outline-none p-2 rounded bg-slate-50 font-medium" />
+            <div className="flex gap-2 items-center text-slate-400 font-bold">답변</div>
+            <textarea value={item.answer} onChange={(e) => setLocalData({...localData, faq: localData.faq.map(f => f.id === item.id ? {...f, answer: e.target.value} : f)})} className="w-full outline-none p-2 rounded bg-slate-50 text-slate-600 h-24" />
+            <button onClick={() => setLocalData({...localData, faq: localData.faq.filter(f => f.id !== item.id)})} className="text-red-500 text-xs font-bold flex items-center gap-1 pt-2"><Trash2 size={14} /> 항목 제거</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderTestimonialsManager = () => (
+    <div className="space-y-6 animate-in slide-in-from-right duration-300">
+      <div className="flex items-center justify-between">
+        <h3 className="text-xl font-black text-slate-900">고객 후기 관리</h3>
+        <button onClick={() => setLocalData({...localData, testimonials: [...localData.testimonials, {id: Date.now().toString(), name: '이름', company: '업체명', content: '내용', rating: 5}]})} className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-xl text-sm font-bold hover:bg-teal-700"><Plus size={18} /> 새 항목</button>
+      </div>
+      <div className="grid md:grid-cols-2 gap-6">
+        {localData.testimonials.map((item) => (
+          <div key={item.id} className="bg-white p-6 rounded-2xl border border-slate-100 space-y-4 relative">
+             <div className="flex text-yellow-400"><Star size={14} className="fill-yellow-400" /> <Star size={14} className="fill-yellow-400" /> <Star size={14} className="fill-yellow-400" /></div>
+             <textarea value={item.content} onChange={(e) => setLocalData({...localData, testimonials: localData.testimonials.map(t => t.id === item.id ? {...t, content: e.target.value} : t)})} className="w-full text-sm italic text-slate-600 outline-none h-24 border-b focus:border-teal-500" />
+             <div className="flex gap-4">
+                <input value={item.name} onChange={(e) => setLocalData({...localData, testimonials: localData.testimonials.map(t => t.id === item.id ? {...t, name: e.target.value} : t)})} placeholder="이름" className="w-1/2 text-sm font-bold outline-none border rounded px-2 py-1" />
+                <input value={item.company} onChange={(e) => setLocalData({...localData, testimonials: localData.testimonials.map(t => t.id === item.id ? {...t, company: e.target.value} : t)})} placeholder="회사" className="w-1/2 text-sm outline-none border rounded px-2 py-1" />
+             </div>
+             <button onClick={() => setLocalData({...localData, testimonials: localData.testimonials.filter(t => t.id !== item.id)})} className="absolute top-4 right-4 text-slate-300 hover:text-red-500"><Trash2 size={18} /></button>
           </div>
         ))}
       </div>
@@ -187,12 +193,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
-      {/* Sidebar */}
       <aside className="w-full md:w-72 bg-white border-r border-slate-200 flex flex-col p-8 space-y-12">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-black text-teal-800 tracking-tighter">JoyWeb CMS</h1>
-        </div>
-        
+        <h1 className="text-2xl font-black text-teal-800 tracking-tighter">JoyWeb CMS</h1>
         <nav className="flex-grow space-y-2">
           {[
             { id: 'stats', label: '대시보드 통계', icon: <BarChart3 size={20} /> },
@@ -202,32 +204,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
             { id: 'testimonials', label: '고객 후기', icon: <MessageSquare size={20} /> },
             { id: 'faq', label: '자주 묻는 질문', icon: <FileText size={20} /> },
           ].map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setActiveMenu(item.id as any)}
-              className={`w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-sm font-bold transition-all ${
-                activeMenu === item.id 
-                  ? 'bg-teal-600 text-white shadow-lg shadow-teal-100' 
-                  : 'text-slate-500 hover:bg-teal-50 hover:text-teal-600'
-              }`}
-            >
-              {item.icon}
-              {item.label}
+            <button key={item.id} onClick={() => setActiveMenu(item.id as any)} className={`w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-sm font-bold transition-all ${activeMenu === item.id ? 'bg-teal-600 text-white shadow-lg shadow-teal-100' : 'text-slate-500 hover:bg-teal-50 hover:text-teal-600'}`}>
+              {item.icon} {item.label}
             </button>
           ))}
         </nav>
-
-        <div className="pt-8 border-t border-slate-100">
-          <button 
-            onClick={onClose}
-            className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-sm font-bold text-slate-500 hover:bg-slate-100 transition-all"
-          >
-            <X size={20} /> 미리보기로 돌아가기
-          </button>
-        </div>
+        <button onClick={onClose} className="w-full flex items-center gap-4 px-4 py-4 rounded-2xl text-sm font-bold text-slate-500 hover:bg-slate-100 transition-all">
+          <X size={20} /> 미리보기로 돌아가기
+        </button>
       </aside>
-
-      {/* Main Area */}
       <main className="flex-grow p-8 md:p-12 max-w-6xl mx-auto w-full">
         <div className="flex items-center justify-between mb-12">
           <div>
@@ -239,35 +224,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
               {activeMenu === 'testimonials' && '클라이언트 리뷰'}
               {activeMenu === 'faq' && '고객 지원 센터'}
             </h2>
-            <p className="text-slate-500 mt-1">코딩 없이 모든 정보를 실시간으로 수정하세요.</p>
           </div>
-          <button 
-            onClick={handleSave}
-            className="flex items-center gap-2 px-8 py-4 bg-teal-600 text-white rounded-2xl font-bold hover:bg-teal-700 shadow-xl shadow-teal-100 transition-all active:scale-95"
-          >
+          <button onClick={handleSave} className="flex items-center gap-2 px-8 py-4 bg-teal-600 text-white rounded-2xl font-bold hover:bg-teal-700 shadow-xl shadow-teal-100 transition-all">
             <Save size={20} /> 변경사항 저장하기
           </button>
         </div>
-
         <div className="pb-12">
           {activeMenu === 'stats' && renderStats()}
           {activeMenu === 'settings' && renderSettings()}
           {activeMenu === 'portfolio' && renderPortfolioManager()}
-          {activeMenu === 'services' && (
-            <div className="p-12 text-center text-slate-400 font-medium bg-white rounded-3xl border border-dashed border-slate-300">
-              서비스 관리 기능이 곧 업데이트 됩니다.
-            </div>
-          )}
-          {activeMenu === 'testimonials' && (
-             <div className="p-12 text-center text-slate-400 font-medium bg-white rounded-3xl border border-dashed border-slate-300">
-              고객 후기 관리 기능이 곧 업데이트 됩니다.
-            </div>
-          )}
-          {activeMenu === 'faq' && (
-             <div className="p-12 text-center text-slate-400 font-medium bg-white rounded-3xl border border-dashed border-slate-300">
-              FAQ 관리 기능이 곧 업데이트 됩니다.
-            </div>
-          )}
+          {activeMenu === 'services' && renderServicesManager()}
+          {activeMenu === 'testimonials' && renderTestimonialsManager()}
+          {activeMenu === 'faq' && renderFAQManager()}
         </div>
       </main>
     </div>
