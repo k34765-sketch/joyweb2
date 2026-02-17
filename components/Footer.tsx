@@ -28,7 +28,7 @@ export const Footer: React.FC<FooterProps> = ({ settings, onNavigate }) => {
             <h2 className="text-3xl font-black text-white">{settings.siteName}</h2>
             <p className="max-w-md leading-relaxed break-keep">
               우리는 단순한 디자인을 넘어 비즈니스의 성장과 고객의 즐거움을 설계합니다. <br/>
-              대한민국 최고의 로고 및 웹 전문 디자인 스튜디오.
+              로고 및 웹 전문 디자인 스튜디오.
             </p>
             <div className="flex gap-4">
               {/* 인스타그램 -> 티스토리 (Pencil 아이콘) */}
