@@ -20,7 +20,25 @@ const App: React.FC = () => {
   const [isAuthorized, setIsAuthorized] = useState(false); // 관리자 인증 여부
   const [siteData, setSiteData] = useState<SiteData>(() => {
     const saved = localStorage.getItem('joyweb_site_data');
-    return saved ? JSON.parse(saved) : INITIAL_DATA;
+    if (!saved) return INITIAL_DATA;
+    
+    try {
+      const parsed: SiteData = JSON.parse(saved);
+      
+      // 스키마 마이그레이션 및 비밀번호 동기화
+      if (!parsed.settings) return INITIAL_DATA;
+      
+      // 중요: 저장된 비번이 없거나 이전 기본값이면 현재 코드의 비번(020708)으로 강제 업데이트
+      const currentDefault = INITIAL_DATA.settings.adminPassword;
+      if (parsed.settings.adminPassword === 'admin1234' || !parsed.settings.adminPassword) {
+        parsed.settings.adminPassword = currentDefault;
+      }
+      
+      return parsed;
+    } catch (e) {
+      console.error("Data load error:", e);
+      return INITIAL_DATA;
+    }
   });
 
   useEffect(() => {
@@ -37,7 +55,8 @@ const App: React.FC = () => {
       if (!isAuthorized) {
         return (
           <AdminAuth 
-            correctPassword={siteData.settings.adminPassword} 
+            // 사이트 데이터와 코드상의 마스터 비번 둘 다 전달
+            correctPassword={siteData.settings.adminPassword || INITIAL_DATA.settings.adminPassword} 
             onSuccess={() => setIsAuthorized(true)} 
             onCancel={() => setActiveTab('home')}
           />
@@ -49,7 +68,7 @@ const App: React.FC = () => {
           onUpdate={handleUpdateData} 
           onClose={() => {
             setActiveTab('home');
-            setIsAuthorized(false); // 나갈 때 인증 해제 (보안 강화)
+            setIsAuthorized(false); 
           }}
         />
       );
