@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { SiteData, PortfolioItem, ServiceItem, FAQItem, Testimonial } from '../types.ts';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { db, storage } from '../firebase.ts';
+import { db, storage, auth } from '../firebase.ts';
 import { doc, setDoc, collection, deleteDoc, getDocs, writeBatch } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
@@ -87,6 +87,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Check if user is authenticated in Firebase
+    if (!auth.currentUser) {
+      alert('이미지 업로드를 위해서는 [Google 계정으로 로그인]이 필요합니다. 다시 로그인해 주세요.');
+      return;
+    }
+
     setUploadingId(itemId);
     try {
       // Upload to Firebase Storage
@@ -100,9 +106,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
       });
       
       alert('이미지가 Firebase Storage에 성공적으로 업로드되었습니다.');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading to Firebase Storage:', error);
-      alert('이미지 업로드에 실패했습니다. Firebase 설정을 확인해 주세요.');
+      if (error.code === 'storage/unauthorized') {
+        alert('업로드 권한이 없습니다. Firebase Console의 Storage -> 규칙 탭에서 권한 설정을 확인해 주세요.');
+      } else {
+        alert(`이미지 업로드에 실패했습니다: ${error.message}`);
+      }
     } finally {
       setUploadingId(null);
     }
