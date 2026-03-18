@@ -2,10 +2,13 @@
 import React, { useState } from 'react';
 import { 
   X, Layout, FileText, Image as ImageIcon, MessageSquare, Settings as SettingsIcon, Save, Plus, Trash2, 
-  BarChart3, Users, MousePointer2, TrendingUp, Star, HelpCircle, Lock, Eye, EyeOff, Link as LinkIcon
+  BarChart3, Users, MousePointer2, TrendingUp, Star, HelpCircle, Lock, Eye, EyeOff, Link as LinkIcon, Loader2
 } from 'lucide-react';
 import { SiteData, PortfolioItem, ServiceItem, FAQItem, Testimonial } from '../types.ts';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { db, storage } from '../firebase.ts';
+import { doc, setDoc, collection, deleteDoc, getDocs, writeBatch } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 interface AdminDashboardProps {
   siteData: SiteData;
@@ -28,9 +31,49 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
   const [localData, setLocalData] = useState<SiteData>(siteData);
   const [showPassword, setShowPassword] = useState(false); // 비밀번호 보임 상태 관리
 
-  const handleSave = () => {
-    onUpdate(localData);
-    alert('모든 설정이 성공적으로 저장되었습니다!');
+  const [isSaving, setIsSaving] = useState(false);
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      // 1. Save Settings
+      await setDoc(doc(db, 'settings', 'global'), localData.settings);
+
+      // 2. Save Portfolio (Batch or individual)
+      // For simplicity, we'll overwrite the collection by deleting and re-adding, 
+      // or just updating all. Since we have IDs, we can update all.
+      const portfolioPromises = localData.portfolio.map(item => 
+        setDoc(doc(db, 'portfolio', item.id), item)
+      );
+      
+      const servicesPromises = localData.services.map(item => 
+        setDoc(doc(db, 'services', item.id), item)
+      );
+
+      const testimonialsPromises = localData.testimonials.map(item => 
+        setDoc(doc(db, 'testimonials', item.id), item)
+      );
+
+      const faqPromises = localData.faq.map(item => 
+        setDoc(doc(db, 'faq', item.id), item)
+      );
+
+      await Promise.all([
+        ...portfolioPromises,
+        ...servicesPromises,
+        ...testimonialsPromises,
+        ...faqPromises
+      ]);
+
+      onUpdate(localData);
+      alert('모든 설정이 Firebase 데이터베이스에 성공적으로 저장되었습니다!');
+    } catch (error) {
+      console.error('Error saving to Firestore:', error);
+      alert('저장 중 오류가 발생했습니다. 권한을 확인해 주세요.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const updateSettings = (key: keyof typeof localData.settings, value: string) => {
@@ -44,35 +87,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const formData = new FormData();
-    formData.append('image', file);
-
+    setUploadingId(itemId);
     try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      // Upload to Firebase Storage
+      const storageRef = ref(storage, `portfolio/${itemId}_${file.name}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `Upload failed with status ${response.status}`);
-      }
-
-      const data = await response.json();
       setLocalData({
         ...localData,
-        portfolio: localData.portfolio.map(p => p.id === itemId ? { ...p, imageUrl: data.url } : p)
+        portfolio: localData.portfolio.map(p => p.id === itemId ? { ...p, imageUrl: downloadURL } : p)
       });
+      
+      alert('이미지가 Firebase Storage에 성공적으로 업로드되었습니다.');
     } catch (error) {
-      console.error('Error uploading file:', error);
-      const isNetlify = window.location.hostname.includes('netlify.app');
-      let errorMessage = error instanceof Error ? error.message : '알 수 없는 오류';
-      
-      if (isNetlify) {
-        errorMessage = '현재 Netlify(정적 호스팅) 환경에서는 직접 업로드를 지원하지 않습니다. Firebase 설정이 필요하거나, 외부 이미지 URL을 사용해 주세요.';
-      }
-      
-      alert(`이미지 업로드에 실패했습니다: ${errorMessage}`);
+      console.error('Error uploading to Firebase Storage:', error);
+      alert('이미지 업로드에 실패했습니다. Firebase 설정을 확인해 주세요.');
+    } finally {
+      setUploadingId(null);
     }
   };
 
@@ -212,8 +244,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
                      <input value={item.imageUrl} onChange={(e) => setLocalData({...localData, portfolio: localData.portfolio.map(p => p.id === item.id ? {...p, imageUrl: e.target.value} : p)})} className="flex-grow px-3 py-1 text-xs text-slate-500 bg-slate-50 border border-transparent rounded-lg focus:border-teal-500 outline-none" placeholder="/images/portfolio/..." />
                    </div>
                    <label className="flex items-center justify-center gap-2 px-3 py-2 bg-teal-50 text-teal-600 rounded-lg text-xs font-bold cursor-pointer hover:bg-teal-100 transition-colors">
-                     <Plus size={14} /> 직접 업로드하기
-                     <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, item.id)} />
+                     {uploadingId === item.id ? (
+                       <Loader2 size={14} className="animate-spin" />
+                     ) : (
+                       <Plus size={14} />
+                     )}
+                     {uploadingId === item.id ? '업로드 중...' : '직접 업로드하기'}
+                     <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, item.id)} disabled={uploadingId === item.id} />
                    </label>
                 </div>
               </div>
@@ -329,8 +366,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
               {activeMenu === 'faq' && '고객 지원 센터'}
             </h2>
           </div>
-          <button onClick={handleSave} className="flex items-center gap-2 px-8 py-4 bg-teal-600 text-white rounded-2xl font-bold hover:bg-teal-700 shadow-xl shadow-teal-100 transition-all">
-            <Save size={20} /> 변경사항 저장하기
+          <button 
+            onClick={handleSave} 
+            disabled={isSaving}
+            className="flex items-center gap-2 px-8 py-4 bg-teal-600 text-white rounded-2xl font-bold hover:bg-teal-700 shadow-xl shadow-teal-100 transition-all disabled:opacity-50"
+          >
+            {isSaving ? <Loader2 size={20} className="animate-spin" /> : <Save size={20} />}
+            {isSaving ? '저장 중...' : '변경사항 저장하기'}
           </button>
         </div>
         <div className="pb-12">

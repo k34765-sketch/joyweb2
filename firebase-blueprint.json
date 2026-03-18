@@ -1,0 +1,98 @@
+{
+  "entities": {
+    "PortfolioItem": {
+      "title": "Portfolio Item",
+      "description": "A project in the portfolio gallery",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "description": { "type": "string" },
+        "link": { "type": "string" }
+      },
+      "required": ["id", "title", "category", "imageUrl", "description"]
+    },
+    "ServiceItem": {
+      "title": "Service Item",
+      "description": "A service offered by the company",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "icon": { "type": "string" }
+      },
+      "required": ["id", "title", "description", "icon"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "A customer review",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "company": { "type": "string" },
+        "content": { "type": "string" },
+        "rating": { "type": "number" }
+      },
+      "required": ["id", "name", "company", "content", "rating"]
+    },
+    "FAQItem": {
+      "title": "FAQ Item",
+      "description": "A frequently asked question",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "question": { "type": "string" },
+        "answer": { "type": "string" }
+      },
+      "required": ["id", "question", "answer"]
+    },
+    "SiteSettings": {
+      "title": "Site Settings",
+      "description": "Global configuration for the website",
+      "type": "object",
+      "properties": {
+        "siteName": { "type": "string" },
+        "primaryColor": { "type": "string" },
+        "accentColor": { "type": "string" },
+        "heroTitle": { "type": "string" },
+        "heroSubtitle": { "type": "string" },
+        "heroImage": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "address": { "type": "string" },
+        "tistoryUrl": { "type": "string" },
+        "kakaoUrl": { "type": "string" },
+        "blogUrl": { "type": "string" },
+        "metaTitle": { "type": "string" },
+        "metaDescription": { "type": "string" },
+        "adminPassword": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "portfolio": {
+      "schema": "PortfolioItem",
+      "description": "Collection of portfolio projects"
+    },
+    "services": {
+      "schema": "ServiceItem",
+      "description": "Collection of services"
+    },
+    "testimonials": {
+      "schema": "Testimonial",
+      "description": "Collection of testimonials"
+    },
+    "faq": {
+      "schema": "FAQItem",
+      "description": "Collection of FAQ items"
+    },
+    "settings/global": {
+      "schema": "SiteSettings",
+      "description": "Global site settings document"
+    }
+  }
+}

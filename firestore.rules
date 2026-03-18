@@ -1,0 +1,164 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: portfolio
+    // Document ID: auto-generated or manual string
+    // Fields:
+    //   - id: string (required)
+    //   - title: string (required, 1-100 chars)
+    //   - category: string (required, 1-50 chars)
+    //   - imageUrl: string (required, valid URL)
+    //   - description: string (required, 1-1000 chars)
+    //   - link: string (optional, valid URL)
+    //
+    // Collection: services
+    // Document ID: auto-generated or manual string
+    // Fields:
+    //   - id: string (required)
+    //   - title: string (required, 1-100 chars)
+    //   - description: string (required, 1-500 chars)
+    //   - icon: string (required, 1-50 chars)
+    //
+    // Collection: testimonials
+    // Document ID: auto-generated or manual string
+    // Fields:
+    //   - id: string (required)
+    //   - name: string (required, 1-100 chars)
+    //   - company: string (required, 1-100 chars)
+    //   - content: string (required, 1-1000 chars)
+    //   - rating: number (required, 1-5)
+    //
+    // Collection: faq
+    // Document ID: auto-generated or manual string
+    // Fields:
+    //   - id: string (required)
+    //   - question: string (required, 1-200 chars)
+    //   - answer: string (required, 1-1000 chars)
+    //
+    // Collection: settings
+    // Document ID: global
+    // Fields:
+    //   - siteName: string
+    //   - primaryColor: string
+    //   - accentColor: string
+    //   - heroTitle: string
+    //   - heroSubtitle: string
+    //   - heroImage: string
+    //   - contactEmail: string
+    //   - contactPhone: string
+    //   - address: string
+    //   - tistoryUrl: string
+    //   - kakaoUrl: string
+    //   - blogUrl: string
+    //   - metaTitle: string
+    //   - metaDescription: string
+    //   - adminPassword: string
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "k34765@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidUrl(url) {
+      return url is string && (url.matches("^https://.*") || url.matches("^http://.*") || url.matches("^/.*"));
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    // Domain Validators
+    function isValidPortfolio(data) {
+      return data.keys().hasAll(['id', 'title', 'category', 'imageUrl', 'description']) &&
+             data.id is string &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 100 &&
+             data.category is string && data.category.size() > 0 && data.category.size() <= 50 &&
+             isValidUrl(data.imageUrl) &&
+             data.description is string && data.description.size() > 0 && data.description.size() <= 1000 &&
+             (!('link' in data) || isValidUrl(data.link));
+    }
+
+    function isValidService(data) {
+      return data.keys().hasAll(['id', 'title', 'description', 'icon']) &&
+             data.id is string &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 100 &&
+             data.description is string && data.description.size() > 0 && data.description.size() <= 500 &&
+             data.icon is string && data.icon.size() > 0 && data.icon.size() <= 50;
+    }
+
+    function isValidTestimonial(data) {
+      return data.keys().hasAll(['id', 'name', 'company', 'content', 'rating']) &&
+             data.id is string &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.company is string && data.company.size() > 0 && data.company.size() <= 100 &&
+             data.content is string && data.content.size() > 0 && data.content.size() <= 1000 &&
+             data.rating is number && data.rating >= 1 && data.rating <= 5;
+    }
+
+    function isValidFAQ(data) {
+      return data.keys().hasAll(['id', 'question', 'answer']) &&
+             data.id is string &&
+             data.question is string && data.question.size() > 0 && data.question.size() <= 200 &&
+             data.answer is string && data.answer.size() > 0 && data.answer.size() <= 1000;
+    }
+
+    function isValidSettings(data) {
+      return data.siteName is string &&
+             data.primaryColor is string &&
+             data.accentColor is string &&
+             data.heroTitle is string &&
+             data.heroSubtitle is string &&
+             isValidUrl(data.heroImage) &&
+             isValidEmail(data.contactEmail) &&
+             data.contactPhone is string &&
+             data.address is string;
+    }
+
+    // Rules
+    match /portfolio/{itemId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidPortfolio(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /services/{itemId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidService(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /testimonials/{itemId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidTestimonial(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /faq/{itemId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidFAQ(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow write: if isAdmin();
+    }
+  }
+}

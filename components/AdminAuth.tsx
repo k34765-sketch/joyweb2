@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import { Lock, ArrowRight, X, AlertCircle } from 'lucide-react';
+import { Lock, ArrowRight, X, LogIn } from 'lucide-react';
+import { loginWithGoogle } from '../firebase.ts';
 
 interface AdminAuthProps {
   correctPassword?: string;
@@ -11,19 +12,36 @@ interface AdminAuthProps {
 export const AdminAuth: React.FC<AdminAuthProps> = ({ correctPassword, onSuccess, onCancel }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+      const result = await loginWithGoogle();
+      if (result.user.email === 'k34765@gmail.com') {
+        onSuccess();
+      } else {
+        alert('관리자 권한이 없는 계정입니다.');
+      }
+    } catch (error) {
+      console.error('Google login error:', error);
+      alert('로그인 중 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     const inputVal = password.trim();
-    // 상위에서 넘어온 비번 혹은 강제 고정 비번 '020708'과 비교
     const targetVal = (correctPassword || '020708').trim();
 
     if (inputVal === targetVal || inputVal === '020708') {
       onSuccess();
     } else {
       setError(true);
-      setPassword(''); // 틀리면 입력창 비우기
+      setPassword('');
       setTimeout(() => setError(false), 500);
     }
   };
@@ -80,6 +98,25 @@ export const AdminAuth: React.FC<AdminAuthProps> = ({ correctPassword, onSuccess
               인증하기 <ArrowRight size={18} />
             </button>
           </div>
+
+          <div className="relative py-2">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200"></div>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-slate-400">또는</span>
+            </div>
+          </div>
+
+          <button 
+            type="button"
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            className="w-full py-4 bg-white border-2 border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-50 transition-all flex items-center justify-center gap-3 active:scale-95 disabled:opacity-50"
+          >
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
+            Google 계정으로 로그인 (k34765@gmail.com)
+          </button>
         </form>
       </div>
 
