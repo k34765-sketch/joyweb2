@@ -53,7 +53,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
         body: formData,
       });
 
-      if (!response.ok) throw new Error('Upload failed');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Upload failed with status ${response.status}`);
+      }
 
       const data = await response.json();
       setLocalData({
@@ -62,7 +65,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
       });
     } catch (error) {
       console.error('Error uploading file:', error);
-      alert('이미지 업로드에 실패했습니다.');
+      alert(`이미지 업로드에 실패했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
     }
   };
 

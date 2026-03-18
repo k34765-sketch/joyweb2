@@ -33,11 +33,19 @@ async function startServer() {
 
   // API Routes
   app.post('/api/upload', upload.single('image'), (req, res) => {
+    console.log('Upload request received:', req.file);
     if (!req.file) {
+      console.error('No file in request');
       return res.status(400).json({ error: 'No file uploaded' });
     }
     const filePath = `/images/portfolio/${req.file.filename}`;
+    console.log('File uploaded successfully:', filePath);
     res.json({ url: filePath });
+  });
+
+  // Health check
+  app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', environment: process.env.NODE_ENV || 'development' });
   });
 
   // Vite middleware for development
