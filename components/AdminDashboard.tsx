@@ -233,7 +233,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h3 className="text-xl font-black text-slate-900">포트폴리오 관리</h3>
-          <p className="text-xs text-slate-500 font-medium">이미지는 <code className="bg-slate-100 px-1 rounded">/public/images/portfolio/</code> 폴더에 업로드 후 경로를 입력하세요. (예: /images/portfolio/p1.jpg)</p>
         </div>
         <button onClick={() => setLocalData({...localData, portfolio: [{id: Date.now().toString(), title: '신규 프로젝트', category: '기타', imageUrl: '/images/portfolio/new-project.jpg', description: '', link: ''}, ...localData.portfolio]})} className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-xl text-sm font-bold hover:bg-teal-700"><Plus size={18} /> 새 항목</button>
       </div>
