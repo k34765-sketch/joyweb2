@@ -65,7 +65,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
       });
     } catch (error) {
       console.error('Error uploading file:', error);
-      alert(`이미지 업로드에 실패했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+      const isNetlify = window.location.hostname.includes('netlify.app');
+      let errorMessage = error instanceof Error ? error.message : '알 수 없는 오류';
+      
+      if (isNetlify) {
+        errorMessage = '현재 Netlify(정적 호스팅) 환경에서는 직접 업로드를 지원하지 않습니다. Firebase 설정이 필요하거나, 외부 이미지 URL을 사용해 주세요.';
+      }
+      
+      alert(`이미지 업로드에 실패했습니다: ${errorMessage}`);
     }
   };
 

@@ -13,10 +13,13 @@ async function startServer() {
   const PORT = 3000;
 
   // Ensure upload directory exists
-  const uploadDir = path.join(process.cwd(), 'public/images/portfolio');
+  const uploadDir = path.resolve(__dirname, 'public/images/portfolio');
   if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
   }
+
+  // Serve static files from public directory
+  app.use(express.static(path.resolve(__dirname, 'public')));
 
   // Multer configuration
   const storage = multer.diskStorage({
@@ -29,7 +32,17 @@ async function startServer() {
     },
   });
 
-  const upload = multer({ storage });
+  const upload = multer({ 
+    storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype.startsWith('image/')) {
+        cb(null, true);
+      } else {
+        cb(new Error('Only images are allowed'));
+      }
+    }
+  });
 
   // API Routes
   app.post('/api/upload', upload.single('image'), (req, res) => {
