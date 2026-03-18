@@ -40,6 +40,32 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
     });
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, itemId: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error('Upload failed');
+
+      const data = await response.json();
+      setLocalData({
+        ...localData,
+        portfolio: localData.portfolio.map(p => p.id === itemId ? { ...p, imageUrl: data.url } : p)
+      });
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('이미지 업로드에 실패했습니다.');
+    }
+  };
+
   // --- Render Functions ---
 
   const renderStats = () => (
@@ -153,8 +179,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
   const renderPortfolioManager = () => (
     <div className="space-y-6 animate-in slide-in-from-right duration-300">
       <div className="flex items-center justify-between">
-        <h3 className="text-xl font-black text-slate-900">포트폴리오 관리</h3>
-        <button onClick={() => setLocalData({...localData, portfolio: [{id: Date.now().toString(), title: '신규 프로젝트', category: '기타', imageUrl: 'https://picsum.photos/800/600', description: '', link: ''}, ...localData.portfolio]})} className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-xl text-sm font-bold hover:bg-teal-700"><Plus size={18} /> 새 항목</button>
+        <div className="space-y-1">
+          <h3 className="text-xl font-black text-slate-900">포트폴리오 관리</h3>
+          <p className="text-xs text-slate-500 font-medium">이미지는 <code className="bg-slate-100 px-1 rounded">/public/images/portfolio/</code> 폴더에 업로드 후 경로를 입력하세요. (예: /images/portfolio/p1.jpg)</p>
+        </div>
+        <button onClick={() => setLocalData({...localData, portfolio: [{id: Date.now().toString(), title: '신규 프로젝트', category: '기타', imageUrl: '/images/portfolio/new-project.jpg', description: '', link: ''}, ...localData.portfolio]})} className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-xl text-sm font-bold hover:bg-teal-700"><Plus size={18} /> 새 항목</button>
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {localData.portfolio.map((item) => (
@@ -166,10 +195,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ siteData, onUpda
                 <input value={item.title} onChange={(e) => setLocalData({...localData, portfolio: localData.portfolio.map(p => p.id === item.id ? {...p, title: e.target.value} : p)})} className="w-full px-3 py-2 text-sm font-bold bg-slate-50 border border-transparent rounded-lg focus:border-teal-500 outline-none" />
               </div>
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">이미지 URL</label>
-                <div className="flex gap-2">
-                   <div className="p-2 bg-slate-100 rounded-lg text-slate-400"><ImageIcon size={14}/></div>
-                   <input value={item.imageUrl} onChange={(e) => setLocalData({...localData, portfolio: localData.portfolio.map(p => p.id === item.id ? {...p, imageUrl: e.target.value} : p)})} className="flex-grow px-3 py-1 text-xs text-slate-500 bg-slate-50 border border-transparent rounded-lg focus:border-teal-500 outline-none" placeholder="https://..." />
+                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">이미지 설정</label>
+                <div className="flex flex-col gap-2">
+                   <div className="flex gap-2">
+                     <div className="p-2 bg-slate-100 rounded-lg text-slate-400"><ImageIcon size={14}/></div>
+                     <input value={item.imageUrl} onChange={(e) => setLocalData({...localData, portfolio: localData.portfolio.map(p => p.id === item.id ? {...p, imageUrl: e.target.value} : p)})} className="flex-grow px-3 py-1 text-xs text-slate-500 bg-slate-50 border border-transparent rounded-lg focus:border-teal-500 outline-none" placeholder="/images/portfolio/..." />
+                   </div>
+                   <label className="flex items-center justify-center gap-2 px-3 py-2 bg-teal-50 text-teal-600 rounded-lg text-xs font-bold cursor-pointer hover:bg-teal-100 transition-colors">
+                     <Plus size={14} /> 직접 업로드하기
+                     <input type="file" accept="image/*" className="hidden" onChange={(e) => handleFileUpload(e, item.id)} />
+                   </label>
                 </div>
               </div>
               <div className="space-y-1">
